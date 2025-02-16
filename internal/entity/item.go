@@ -1,9 +1,7 @@
 package entity
 
-/*
-Item represents a merchandise product.
-*/
 type Item struct {
-	Name  string
-	Price int
+	ID    int    `db:"id"`
+	Name  string `db:"name"`
+	Price int    `db:"price"`
 }

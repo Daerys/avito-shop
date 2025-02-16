@@ -1,0 +1,103 @@
+syntax = "proto3";
+
+package avito.shop.v1;
+
+option go_package = "./api/shop;shop";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/descriptor.proto";
+
+extend google.protobuf.MethodOptions {
+  bool requires_auth = 50000;
+}
+
+service AvitoShop {
+  rpc GetInfo(InfoRequest) returns (InfoResponse) {
+    option (google.api.http) = {
+      get: "/api/info"
+    };
+    option (requires_auth) = true;
+  }
+
+  rpc SendCoin(SendCoinRequest) returns (SendCoinResponse) {
+    option (google.api.http) = {
+      post: "/api/sendCoin"
+      body: "*"
+    };
+    option (requires_auth) = true;
+  }
+
+  rpc BuyItem(BuyItemRequest) returns (BuyItemResponse) {
+    option (google.api.http) = {
+      get: "/api/buy/{item}"
+    };
+    option (requires_auth) = true;
+  }
+
+  rpc Auth(AuthRequest) returns (AuthResponse) {
+    option (google.api.http) = {
+      post: "/api/auth"
+      body: "*"
+    };
+    option (requires_auth) = false;
+  }
+}
+
+message BuyItemRequest {
+  string item = 1;
+}
+
+message InfoRequest {
+  string username = 1;
+}
+
+message InfoResponse {
+  int32 coins = 1;
+  repeated InventoryItem inventory = 2;
+  CoinHistory coinHistory = 3;
+}
+
+message InventoryItem {
+  string type = 1;
+  int32 quantity = 2;
+}
+
+message CoinHistory {
+  repeated Received received = 1;
+  repeated Sent sent = 2;
+}
+
+message Received {
+  string fromUser = 1;
+  int32 amount = 2;
+}
+
+message Sent {
+  string toUser = 1;
+  int32 amount = 2;
+}
+
+message AuthRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message AuthResponse {
+  string token = 1;
+}
+
+message SendCoinRequest {
+  string fromUser = 1;
+  string toUser = 2;
+  int32 amount = 3;
+}
+message SendCoinResponse {
+  int32 remaining_coins = 1;
+  string transaction_id = 2;
+}
+
+message BuyItemResponse {
+  int32 remaining_coins = 1;
+  repeated InventoryItem items = 2;
+}

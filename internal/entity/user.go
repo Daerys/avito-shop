@@ -1,14 +1,8 @@
 package entity
 
-import "sync"
-
-/*
-User represents an employee of the shop.
-*/
 type User struct {
-	ID           int
-	Username     string
-	PasswordHash string
-	Coins        int
-	Inventory    *sync.Map
+	ID           int64  `db:"id"`
+	Username     string `db:"username"`
+	PasswordHash string `db:"password_hash"`
+	Coins        int    `db:"coins"`
 }
